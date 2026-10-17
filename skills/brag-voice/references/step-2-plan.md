@@ -113,11 +113,12 @@ But adapt it. These are the right scene counts for each tone:
 
 ## Duration guidance
 
-Scene durations must sum to 15-25 seconds. Count them.
+Scene durations must sum to a total inside the duration window: 15-25 seconds by default, or `--duration` ± 10% (see "Duration" in `SKILL.md`). Count them.
 
-- Under 15 seconds: too thin, add a scene or lengthen holds.
-- Over 25 seconds: cut a scene or tighten timing.
-- 18-22 seconds is the sweet spot for most brag videos.
+- Under the window: too thin, add a scene or lengthen holds.
+- Over the window: cut a scene or tighten timing.
+- Default window: 18-22 seconds is the sweet spot.
+- Longer window: scale the scene counts in the table above to the length (roughly one scene per 4-5s, chaotic one per 2-3s), and add highlights rather than stretching holds. Pick a music track at least as long as the video, or plan a clean loop or ending.
 
 ## Reading time (keep the pace, not at text's expense)
 

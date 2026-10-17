@@ -11,7 +11,7 @@ You built it. Now let's brag about it.
 
 ## Invocation dispatch (must happen first)
 
-**Model check.** If you are Claude Opus 5.5 and the invocation doesn't ask for the full workflow (`--full`, "use the full brag") or for voiceover (`--voice`, which brag-slim doesn't do), switch to brag-slim: read `<skill-dir>/slim.md` (the /brag-slim skill, bundled here) and follow it for the rest of this run instead of this file. Pass along the user's input, and pass any other options (`--no-music`, `--title`, …) as plain-language direction. Tell the user in one line first, e.g. "You're on Opus 5.5, so I'm using /brag-slim: I build the whole video myself. Say 'use the full brag' to switch back." If you are any other model, or can't tell which model you are, skip this check.
+**Model check.** If you are Claude Opus 5.5 and the invocation doesn't ask for the full workflow (`--full`, "use the full brag") or for voiceover (`--voice`, which brag-slim doesn't do), or a `--duration` above 25 seconds (brag-slim caps at 25s), switch to brag-slim: read `<skill-dir>/slim.md` (the /brag-slim skill, bundled here) and follow it for the rest of this run instead of this file. Pass along the user's input, and pass any other options (`--no-music`, `--title`, …) as plain-language direction. Tell the user in one line first, e.g. "You're on Opus 5.5, so I'm using /brag-slim: I build the whole video myself. Say 'use the full brag' to switch back." If you are any other model, or can't tell which model you are, skip this check.
 
 Before inspecting the project, parse the complete `/brag` invocation. If the
 invocation contains `--voice`, set `voice.enabled = true`. Enable narration
@@ -45,7 +45,7 @@ Parse these options:
 |---|---|---|
 | `--tone` | preset or freeform description | inferred |
 | `--format` | `landscape`, `vertical`, `square` | `landscape` |
-| `--duration` | seconds | auto (15-25s) |
+| `--duration` | seconds (no upper limit) | auto (15-25s) |
 | `--no-music` | flag | music on |
 | `--no-sfx` | flag | sfx on |
 | `--title` | string | inferred from project |
@@ -58,6 +58,15 @@ ElevenLabs through `<skill-dir>/scripts/elevenlabs-tts.mjs` (see
 `ELEVENLABS_MODEL_ID` (default `eleven_v3`) from the environment, and falls
 back to Kokoro on its own, with tags stripped, when no API key is set. Never
 print, echo, or write the API key anywhere.
+
+### Duration
+
+The **duration window** is the target every step plans, builds, and checks against:
+
+- No `--duration`: 15–25 seconds (18–22 is the sweet spot).
+- `--duration N`: N seconds ± 10% (e.g. `--duration 45` → 40.5–49.5s). There is no upper limit; natural language ("a 1-minute video") counts too.
+
+Whenever this skill or its references say "the duration window", use this range.
 
 Tone can be a preset (`default`, `polished`, `yc-parody`, `chaotic`, `deadpan`, `cinematic`, `app-store`) or a creative direction such as "fake Series A launch from 2016", "museum exhibit", or "overproduced mobile game ad".
 
@@ -136,7 +145,7 @@ Write `<output-dir>/brag-plan.md` (where `<output-dir>` is `brag-output/` or the
 
 When music is selected, include a compact `Music cue guidance` section: read the bundled track's cue preset from `<skill-dir>/assets/music/cues/` if present, otherwise note cues will be detected at composition time (any track now supports beat sync — see `references/audio.md`). Cue metadata is optional timing guidance only: story, readability, pacing, and product clarity stay primary.
 
-**Gate:** `<output-dir>/brag-plan.md` exists with a full storyboard. Scene durations sum to 15–25 seconds.
+**Gate:** `<output-dir>/brag-plan.md` exists with a full storyboard. Scene durations sum to a total inside the duration window.
 
 ---
 
@@ -188,7 +197,7 @@ Always allow a freeform creative direction to refine or override the preset.
 
 These apply to every brag video regardless of tone.
 
-**Short.** 15–25 seconds. Not one second more without a reason. This holds whether or not narration is on; narration does not extend the window.
+**Short.** Stay inside the duration window: 15–25 seconds by default, or what `--duration` asked for. Not one second more without a reason. This holds whether or not narration is on; narration does not extend the window. Longer videos (over 30s) earn their length: more highlights, not slower ones, and a new visual or narrative beat every 8–10 seconds so attention never sags.
 
 **Readable.** Keep the pace high through motion and cuts, never by flashing text. Every line a viewer must read holds long enough to read it (short label ~0.8s settled; a sentence ~0.3s per word). Fast-in, then hold — never fast-in, then gone.
 
@@ -206,5 +215,7 @@ These apply to every brag video regardless of tone.
 ```
 Hook (2-3s) → Reveal (2-4s) → 2-3 sharp highlights (5-12s) → Punchline/outro (2-4s)
 ```
+
+For a longer window, keep the hook and outro the same size and spend the extra time on more highlights (4-6 for 30-60s, grouped into 2-3 acts beyond that), not on longer holds.
 
 Adapt this. Not every project needs exactly 3 highlights. The pattern is a starting shape, not a template.
