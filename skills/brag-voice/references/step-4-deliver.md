@@ -82,6 +82,8 @@ The share copy should be:
 - Specific to the project — no generic "excited to share" language
 - Tone-matched to the brag video
 
+If the share copy quotes or reuses voiceover lines, strip the ElevenLabs tags first (regex `\[[^\]]*\]`, then collapse double spaces and trim). Tags belong only in the text sent to ElevenLabs.
+
 `share-copy.txt` is the canonical single caption. Do not put multi-platform variants, long launch notes, or Product Hunt copy in this file.
 
 If variants are useful, write them to a separate optional file:

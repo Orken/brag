@@ -1,13 +1,20 @@
 {
-  "name": "brag",
-  "description": "Turn the current project into a short, polished, shareable launch video using HyperFrames.",
-  "version": "0.4.0",
+  "name": "brag-voice",
+  "description": "Turn the current project into a short, polished, shareable launch video using Hyperframes, with optional ElevenLabs voiceover (cloned voice + emotion tags).",
+  "version": "0.4.0-voice.1",
   "author": {
     "name": "Shunit Haviv Hakimi",
     "email": "shunithaviv@gmail.com"
   },
   "license": "MIT",
-  "homepage": "https://github.com/latent-spaces/brag",
-  "repository": "https://github.com/latent-spaces/brag",
-  "keywords": ["video", "launch", "hyperframes", "skill"]
+  "homepage": "https://github.com/Orken/brag",
+  "repository": "https://github.com/Orken/brag",
+  "keywords": [
+    "video",
+    "launch",
+    "hyperframes",
+    "skill",
+    "elevenlabs",
+    "voiceover"
+  ]
 }

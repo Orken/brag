@@ -1,9 +1,11 @@
 ---
-name: brag
-description: Turn the current project website into a short, polished, shareable launch video using Hyperframes. Use when someone says "/brag", "let's brag about this", "make a launch video", "turn this into a video", or wants to share what they built. Reads the project code directly — no live URL or screenshots needed.
+name: brag-voice
+description: Turn the current project website into a short, polished, shareable launch video using Hyperframes, with optional ElevenLabs narration in the user's cloned voice (emotion tags supported). Use when someone says "/brag-voice", "/brag", "let's brag about this", "make a launch video", "narrate a launch video", "turn this into a video", or wants to share what they built. Reads the project code directly — no live URL or screenshots needed.
 ---
 
-# /brag
+# /brag-voice
+
+A fork of `/brag` whose voiceover uses ElevenLabs (cloned voice + audio tags). Everything else is the classic `/brag` workflow; `/brag` below refers to this skill.
 
 You built it. Now let's brag about it.
 
@@ -49,9 +51,13 @@ Parse these options:
 | `--title` | string | inferred from project |
 | `--voice` | flag | narration off |
 
-Voice is opt-in. If `--voice` is present, use Kokoro via Hyperframes and do
-not add any provider-selection logic. The voice workflow is intentionally
-single-provider.
+Voice is opt-in. If `--voice` is present, generate the narration with
+ElevenLabs through `<skill-dir>/scripts/elevenlabs-tts.mjs` (see
+"Voiceover" in `references/step-3-compose.md`). The script reads
+`ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` and optionally
+`ELEVENLABS_MODEL_ID` (default `eleven_v3`) from the environment, and falls
+back to Kokoro on its own, with tags stripped, when no API key is set. Never
+print, echo, or write the API key anywhere.
 
 Tone can be a preset (`default`, `polished`, `yc-parody`, `chaotic`, `deadpan`, `cinematic`, `app-store`) or a creative direction such as "fake Series A launch from 2016", "museum exhibit", or "overproduced mobile game ad".
 
@@ -64,6 +70,31 @@ not simply read visible text, matches scene pacing, sounds natural and
 conversational, and moves smoothly between scenes. Keep the script concise and
 specific to the product so the voice feels like part of the edit rather than a
 separate narration track.
+
+The voiceover script carries ElevenLabs audio tags in square brackets, always
+in English even when the narration is in another language:
+
+- Put a tag right before the sentence it colors. Use them sparingly, on the
+  strong moments only (hook, reveal, punchline); most lines get none.
+- Pace with ellipses (`...`) and `[short pause]` / `[long pause]`.
+- Write numbers, scores, and symbols the way they are spoken
+  ("ninety-nine percent", "four point eight out of five"), never as digits.
+- Allowed tags (non-exhaustive):
+  - emotions: `[excited]` `[happy]` `[curious]` `[surprised]` `[thoughtful]` `[mischievously]` `[sarcastic]` `[sad]` `[annoyed]`
+  - reactions: `[laughs]` `[chuckles]` `[giggling]` `[happy gasp]` `[woo]`
+  - breath: `[sighs]` `[exhales]` `[inhales deeply]` `[clears throat]`
+  - pauses: `[short pause]` `[long pause]`
+  - voice: `[whispers]` `[shouting]`
+- Forbidden: visual or context tags (`[grinning]`, `[pacing]`, `[standing]`,
+  `[music]`) and sound-effect tags (`[applause]`, `[explosion]`, …). The video
+  already has its own SFX layer.
+- Each tone has preferred tags: see "Voiceover tags" in
+  [references/tones.md](references/tones.md).
+
+**Displayed text never shows tags.** Wherever narration is displayed or
+transcribed — on-screen captions or subtitles, share copy, transcripts,
+alt text — remove the tags with the regex `\[[^\]]*\]`, then collapse double
+spaces and trim. Only the text sent to ElevenLabs keeps them.
 
 ---
 

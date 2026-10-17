@@ -1,6 +1,6 @@
 # Tone reference
 
-Seven tones. Each changes scripting energy, pacing, typography personality, and transition style.
+Seven tones. Each changes scripting energy, pacing, typography personality, and transition style. With `--voice`, each also has preferred ElevenLabs audio tags ("Voiceover tags"); the general tag rules live in "Narration guidance" in `SKILL.md`.
 
 ---
 
@@ -9,6 +9,8 @@ Seven tones. Each changes scripting energy, pacing, typography personality, and 
 **Energy:** Playful, clean, postable. The product gets to be funny on its own terms.
 
 **Voice:** First person plural. Warm. Direct. No corporate language.
+
+**Voiceover tags:** `[mischievously]` `[chuckles]` `[curious]`, one `[short pause]` before the reveal. Teasing, never loud.
 
 **Typography:** Mixed case. Comfortable weight. Let words breathe.
 
@@ -43,6 +45,8 @@ Find your perfect stablemate.
 
 **Voice:** Third person or no voice. The product speaks for itself.
 
+**Voiceover tags:** Almost none. Pauses only: `...` and `[short pause]`. At most one `[thoughtful]` in the whole script.
+
 **Typography:** Mixed case. Light-to-medium weight. Generous letter-spacing. Nothing aggressive.
 
 **Pacing:** 3-4 scenes. Each scene 4-6 seconds. Confidence through slow reveals.
@@ -68,6 +72,8 @@ upon completion.
 **Energy:** Deadpan startup launch energy. The joke is how seriously it's delivered.
 
 **Voice:** Serious. Matter-of-fact. No winking. The absurdity comes from the product, not the tone.
+
+**Voiceover tags:** Straight-faced: `[thoughtful]`, `[clears throat]` before a big claim, `[short pause]` before the stat. No laughs, no `[sarcastic]`: the delivery never winks.
 
 **Typography:** Sentence case. Heavy weight or medium weight. Courier-adjacent for data points. No decoration.
 
@@ -104,6 +110,8 @@ taxifortaxis.com
 
 **Voice:** Aggressive. SHORT WORDS. CAPS. Metric dumps. Exclamation marks optional but not mandatory — confidence is louder.
 
+**Voiceover tags:** `[excited]` `[shouting]` `[woo]` `[laughs]`, few pauses. Generate with `--creative`.
+
 **Typography:** ALL CAPS. Heavy weight. Slightly oversized. Some words tilted. Some words larger than expected.
 
 **Pacing:** 6-8 scenes. Some scenes under 2 seconds. Never more than 4 seconds per scene.
@@ -138,6 +146,8 @@ On-demand chaos, now with routing.
 
 **Voice:** Minimal. One observation. Then the product. That's it.
 
+**Voiceover tags:** Almost none. Pauses only: `[long pause]` and `...`; one `[sighs]` at most.
+
 **Typography:** Mixed case. Large. Sparse. Lots of empty space. One thought at a time.
 
 **Pacing:** 3-4 scenes. Long holds. 4-7 seconds per scene. The pace is the joke.
@@ -168,6 +178,8 @@ Fish Flight School.
 **Energy:** Dramatic. Trailer-scale. The product is being treated like a blockbuster.
 
 **Voice:** Epic. Short declarative sentences. Each one lands before the next begins.
+
+**Voiceover tags:** Trailer: `[excited]` on the payoff, `[inhales deeply]` or `[whispers]` on the hook, and `[long pause]` / `[short pause]` between the big lines. Generate with `--creative`.
 
 **Typography:** ALL CAPS or heavy mixed case. Full-bleed scenes. Large type. Significant scale.
 
@@ -203,6 +215,8 @@ The sky was never the limit.
 **Energy:** Clean. Professional. Feature-forward. The product is real (even when it's not).
 
 **Voice:** Feature-benefit. Third person. Present tense.
+
+**Voiceover tags:** `[happy]` once, maybe `[excited]` on the CTA, `[short pause]` between features.
 
 **Typography:** Title case. Medium weight. Clean, readable. No aggression.
 

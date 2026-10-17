@@ -118,23 +118,42 @@ transcribe audio, duck music, add a voice track, or merge narration into the
 video. The normal video export must remain entirely voice-agnostic.
 
 When voice is enabled, write the narration lines into `brag-plan.md` under a
-`## Voiceover script` section, then generate the audio through Kokoro:
+`## Voiceover script` section, with ElevenLabs audio tags as described in
+"Narration guidance" in `SKILL.md` and "Voiceover tags" in `tones.md`. Copy
+the script text alone (no headings, no scene labels, no timings) to
+`<output-dir>/voiceover-script.txt`, then generate the audio with ElevenLabs:
 
 ```bash
-npx hyperframes tts "<narration text or path to script>" \
-  --voice af_heart \
+node <skill-dir>/scripts/elevenlabs-tts.mjs <output-dir>/voiceover-script.txt \
   --output <output-dir>/composition/assets/voiceover.wav
 ```
 
-If the user wants a different Kokoro voice, run `npx hyperframes tts --list`
-to see the available options. By default, use the command above to generate
-narration.
+Add `--creative` for high-energy tones (`chaotic`, `cinematic`, or a hype
+freeform direction): it lowers stability to v3's "Creative" preset for more
+expressive delivery. The default is the "Natural" preset.
+
+The script needs `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` in the
+environment (`ELEVENLABS_MODEL_ID` is optional, default `eleven_v3`; tags need
+v3 or newer). Check with `[ -n "$ELEVENLABS_API_KEY" ]`, never by printing the
+value. It splits scripts longer than the model's per-request limit by
+paragraph and joins the parts with FFmpeg. If the API fails, report the
+script's error message to the user and stop; do not retry with another
+provider silently.
+
+Without `ELEVENLABS_API_KEY`, the script prints a one-line warning, strips the
+tags (Kokoro would read them aloud), and falls back to Kokoro via
+`npx hyperframes tts --voice af_heart` on the same output path. Tell the user
+the narration used the fallback voice.
 
 Wire it into the composition on its own track. Music ducks to 0.12–0.15 for the duration of the voiceover, then returns to its normal level:
 
 ```html
 <audio id="vo" data-start="0" data-track-index="3" data-volume="1" src="assets/voiceover.wav"></audio>
 ```
+
+If the composition shows the narration as captions or subtitles, build them
+from the script with the tags removed (regex `\[[^\]]*\]`, then collapse
+double spaces and trim). Viewers must never see `[excited]` on screen.
 
 The 15-25 second window holds whether or not narration is on. Write the narration script to fit that window. Within the window, scene durations flex to match the generated audio rather than being fixed in advance: check the WAV duration after generation and adjust `data-duration` values accordingly. If the rendered narration overruns the window, cut the script and regenerate; do not stretch the video past 25 seconds to fit it.
 
@@ -210,6 +229,7 @@ Before moving to delivery, verify:
 - [ ] The composition shows at least one real UI, copy, or visual element from the project.
 - [ ] Every factual claim on screen is grounded in the project (see below).
 - [ ] Total duration is 15-25 seconds.
+- [ ] If voice is on: `voiceover.wav` came from `elevenlabs-tts.mjs`, and any caption, subtitle, or on-screen narration text has its `[tags]` stripped.
 - [ ] Hyperframes check passes, or any blocker is documented for the user.
 
 ### Grounding factual claims
