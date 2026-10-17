@@ -125,8 +125,17 @@ the script text alone (no headings, no scene labels, no timings) to
 
 ```bash
 node <skill-dir>/scripts/elevenlabs-tts.mjs <output-dir>/voiceover-script.txt \
-  --output <output-dir>/composition/assets/voiceover.wav
+  --output <output-dir>/composition/assets/voiceover.wav \
+  --words <output-dir>/composition/transcript.json
 ```
+
+`--words` asks ElevenLabs for timestamps in the same call and writes
+`transcript.json` at the composition root: a normalized word array
+(`[{ id, text, start, end }]`) taken from the script itself, with the tags
+already removed. It replaces the Whisper pass: Hyperframes captions pick up a
+root `transcript.json` and skip transcription, and there is no mishearing of
+product names. Use it for captions and to place scene cuts on the narration
+(a scene whose line starts at word `w12` starts at that word's `start`).
 
 Add `--creative` for high-energy tones (`chaotic`, `cinematic`, or a hype
 freeform direction): it lowers stability to v3's "Creative" preset for more
@@ -145,6 +154,19 @@ tags (Kokoro would read them aloud), and falls back to Kokoro via
 `npx hyperframes tts --voice af_heart` on the same output path. Tell the user
 the narration used the fallback voice.
 
+Whisper is the fallback for word timings only. Use it only if
+`transcript.json` is missing after generation (Kokoro fallback, or the model
+returned no timestamps; the script says so) or if the timestamps call fails
+and you rerun without `--words`:
+
+```bash
+npx hyperframes transcribe <output-dir>/composition/assets/voiceover.wav --model small --language <code>
+```
+
+Pass the narration's language (`fr`, `es`, …), never a `.en` model for
+non-English narration: `.en` models silently translate into English. Use
+`small.en` only for English narration.
+
 Wire it into the composition on its own track. Music ducks to 0.12–0.15 for the duration of the voiceover, then returns to its normal level:
 
 ```html
@@ -152,10 +174,11 @@ Wire it into the composition on its own track. Music ducks to 0.12–0.15 for th
 ```
 
 If the composition shows the narration as captions or subtitles, build them
-from the script with the tags removed (regex `\[[^\]]*\]`, then collapse
-double spaces and trim). Viewers must never see `[excited]` on screen.
+from `transcript.json` (tags already removed), or from the script with the
+tags removed (regex `\[[^\]]*\]`, then collapse double spaces and trim).
+Viewers must never see `[excited]` on screen.
 
-The duration window holds whether or not narration is on. Write the narration script to fit that window. Within the window, scene durations flex to match the generated audio rather than being fixed in advance: check the WAV duration after generation and adjust `data-duration` values accordingly. If the rendered narration overruns the window, cut the script and regenerate; do not stretch the video past the window to fit it.
+The duration window holds whether or not narration is on. Write the narration script to fit that window. Within the window, scene durations flex to match the generated audio rather than being fixed in advance: check the WAV duration after generation and adjust `data-duration` values accordingly, using the word timings in `transcript.json` to land each scene on its line. If the rendered narration overruns the window, cut the script and regenerate; do not stretch the video past the window to fit it.
 
 ---
 
@@ -229,7 +252,7 @@ Before moving to delivery, verify:
 - [ ] The composition shows at least one real UI, copy, or visual element from the project.
 - [ ] Every factual claim on screen is grounded in the project (see below).
 - [ ] Total duration is inside the duration window.
-- [ ] If voice is on: `voiceover.wav` came from `elevenlabs-tts.mjs`, and any caption, subtitle, or on-screen narration text has its `[tags]` stripped.
+- [ ] If voice is on: `voiceover.wav` came from `elevenlabs-tts.mjs`, `composition/transcript.json` came from its `--words` (Whisper only as documented fallback), and any caption, subtitle, or on-screen narration text has its `[tags]` stripped.
 - [ ] Hyperframes check passes, or any blocker is documented for the user.
 
 ### Grounding factual claims

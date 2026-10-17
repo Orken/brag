@@ -136,7 +136,11 @@ export ELEVENLABS_MODEL_ID="eleven_v3" # optional, default eleven_v3 (tags need 
 
 The voiceover script uses ElevenLabs audio tags (`[excited]`, `[mischievously]`, `[chuckles]`, `[short pause]`…), picked per tone. They are stripped from anything shown on screen or in the share copy.
 
-**Fallback:** without `ELEVENLABS_API_KEY`, the script warns in one line, strips the tags, and falls back to Kokoro through Hyperframes.
+**No Whisper pass:** the same ElevenLabs call returns word timings (`--words`), written as `composition/transcript.json` for captions and scene timing. Whisper is only used when no timings come back (Kokoro fallback, or a model without timestamps).
+
+**Fallback:** without `ELEVENLABS_API_KEY`, the script warns in one line, strips the tags, and falls back to Kokoro through Hyperframes (captions then use Whisper).
+
+To go back to the version before ElevenLabs timestamps: tag `avant-elevenlabs-timestamps`.
 
 You get a `brag-output/` folder with the plan, a composition brief, share copy, and the rendered `brag.mp4`.
 
